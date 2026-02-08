@@ -156,7 +156,12 @@
     "webpack-dev-server": "^5.2.3",
     "webpack-merge": "^6.0.1",
     "workbox-webpack-plugin": "^7.4.0",
-    "yarn-deduplicate": "^6.0.2"
+    "yarn-deduplicate": "^6.0.2",
+    "workbox-core": "^7.4.0",
+    "workbox-routing": "^7.4.0",
+    "workbox-strategies": "^7.4.0",
+    "workbox-cacheable-response": "^7.4.0",
+    "workbox-expiration": "^7.4.0"
   },
   "engines": {
     "node": ">= 20.9.0"
