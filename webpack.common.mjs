@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import hastscript from "hastscript";
+import hastscriptImport from "hastscript";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import autolink from "remark-autolink-headings";
 import remarkEmoji from "remark-emoji";
@@ -16,6 +16,19 @@ import remarkRemoveHeadingId from "./src/remark-plugins/remark-remove-heading-id
 import remarkResponsiveTable from "./src/remark-plugins/remark-responsive-table/remark-responsive-table.mjs";
 import slug from "./src/remark-plugins/remark-slug/index.mjs";
 
+// hastscript can be resolved as ESM or CommonJS depending on environment/tooling.
+// Support default-function exports and { h } named exports.
+const hastscript =
+  (typeof hastscriptImport === "function" && hastscriptImport) ||
+  (typeof hastscriptImport?.h === "function" && hastscriptImport.h) ||
+  (typeof hastscriptImport?.default === "function" &&
+    hastscriptImport.default) ||
+  (typeof hastscriptImport?.default?.h === "function" &&
+    hastscriptImport.default.h);
+
+if (!hastscript) {
+  throw new Error("Unable to resolve hastscript function export");
+}
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

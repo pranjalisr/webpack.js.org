@@ -1,7 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { CacheableResponsePlugin } from "workbox-cacheable-response";
 import { cacheNames } from "workbox-core";
-import { ExpirationPlugin } from "workbox-expiration";
 import {
   registerRoute,
   setCatchHandler,
@@ -12,6 +10,10 @@ import {
   NetworkOnly,
   StaleWhileRevalidate,
 } from "workbox-strategies";
+import {
+  CacheableResponsePlugin,
+  ExpirationPlugin,
+} from "workbox-webpack-plugin";
 /* eslint-enable import/no-extraneous-dependencies */
 
 const cacheName = cacheNames.runtime;
