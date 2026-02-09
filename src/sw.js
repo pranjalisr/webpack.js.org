@@ -51,6 +51,7 @@ self.addEventListener("install", (event) => {
 });
 self.addEventListener("activate", (event) => {
   event.waitUntil(
+     // clean up those who are not listed in manifestURLs
     caches.open(cacheName).then((cache) =>
       cache.keys().then((keys) => {
         for (const request of keys) {
