@@ -25,42 +25,30 @@ const otherManifest = [
     url: "/app-shell/index.html",
   },
 ];
-const manifestURLs = [...manifest, ...otherManifest].map((entry) => {
-  const url = new URL(entry.url, self.location);
-  return url.href;
-});
+const EXCLUDED_PRECACHE_URLS = new Set([
+   new URL("/icon_512x512.png", self.location).href,
+]);
+const manifestURLs = [...manifest, ...otherManifest]
+.map((entry) => new URL(entry.url, self.location).href)
+.filter((href) => !EXCLUDED_PRECACHE_URLS.has(href));
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    (async () => {
-      const cache = await caches.open(cacheName);
-
-      await Promise.all(
-        manifestURLs.map(async (url) => {
-          try {
-            const response = await fetch(url, { cache: "no-store" });
-            if (response && response.ok) {
-              await cache.put(url, response);
-            }
-          } catch (err) {
-            console.warn("[sw] Failed to precache:", url, err);
-          }
-        }),
-      );
-    })(),
+    caches.open(cacheName).then((cache) => cache.addAll(manifestURLs))
   );
 });
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.open(cacheName).then((cache) =>
+    (async () => {
+      const cache = await caches.open(cacheName);
       // clean up those who are not listed in manifestURLs
-      cache.keys().then((keys) => {
-        for (const request of keys) {
-          if (!manifestURLs.includes(request.url)) {
-            cache.delete(request);
-          }
-        }
-      }),
-    ),
+      const keys = await cache.keys();
+      await Promise.all(
+        keys.map((request) =>
+          manifestURLs.includes(request.url) ? Promise.resolve() : cache.delete(request),
+      ),
+    );
+   }) (),
   );
 });
 registerRoute(
