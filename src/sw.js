@@ -43,13 +43,11 @@ self.addEventListener("activate", (event) => {
       const cache = await caches.open(cacheName);
       // clean up those who are not listed in manifestURLs
       const keys = await cache.keys();
-      await Promise.all(
-        keys.map((request) =>
-          manifestURLs.includes(request.url)
-            ? Promise.resolve()
-            : cache.delete(request),
-        ),
-      );
+      for (const request of keys) {
+        if (!manifestURLs.includes(request.url)) {
+          await cache.delete(request);
+        }
+      }
     })(),
   );
 });
