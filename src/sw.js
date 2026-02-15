@@ -28,13 +28,29 @@ const otherManifest = [
 const EXCLUDED_PRECACHE_URLS = new Set([
   new URL("/icon_512x512.png", self.location).href,
 ]);
-const manifestURLs = [...manifest, ...otherManifest]
-  .map((entry) => new URL(entry.url, self.location).href)
-  .filter((href) => !EXCLUDED_PRECACHE_URLS.has(href));
+
+const allManifestURLs = [...manifest, ...otherManifest].map(
+  (entry) => new URL(entry.url, self.location).href,
+);
+const requiredManifestURLs = allManifestURLs.filter(
+  (href) => !EXCLUDED_PRECACHE_URLS.has(href),
+);
+
+const optionalManifestURLs = [...EXCLUDED_PRECACHE_URLS];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(cacheName).then((cache) => cache.addAll(manifestURLs)),
+    (async () => {
+      const cache = await caches.open(cacheName);
+
+      // Fail install only if "required" assets fail
+      await cache.addAll(requiredManifestURLs);
+
+      // Optional assets: don't fail SW install if these fail
+      await Promise.allSettled(
+        optionalManifestURLs.map((url) => cache.add(url)),
+      );
+    })(),
   );
 });
 self.addEventListener("activate", (event) => {
@@ -44,7 +60,7 @@ self.addEventListener("activate", (event) => {
       // clean up those who are not listed in manifestURLs
       const keys = await cache.keys();
       for (const request of keys) {
-        if (!manifestURLs.includes(request.url)) {
+        if (!requiredManifestURLs.includes(request.url)) {
           await cache.delete(request);
         }
       }
@@ -52,7 +68,7 @@ self.addEventListener("activate", (event) => {
   );
 });
 registerRoute(
-  ({ url }) => manifestURLs.includes(url.href),
+  ({ url }) => requiredManifestURLs.includes(url.href),
   new NetworkFirst({
     cacheName,
   }),
