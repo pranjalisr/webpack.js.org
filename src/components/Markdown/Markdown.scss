@@ -193,9 +193,12 @@ $topHeightMobileWithBanner: $bannerHeight + $topHeightMobile;
       > .preview__prefix,
       > .todo__prefix {
         text-transform: capitalize;
-        font-weight: 700;
-        color: #000;
-        font-size: getFontSize(1);
+        font-weight: 600; // slightly bold but not heading-level
+        color: #1a1a1a;
+        font-size: getFontSize(0);
+        display: block;
+        margin-bottom: 0.25em;
+        color: #1a1a1a;
       }
     }
 
@@ -361,10 +364,12 @@ $topHeightMobileWithBanner: $bannerHeight + $topHeightMobile;
   }
 
   pre {
-    background-color: #2d3748;
-    color: #e2e8f0;
-    padding: 1rem;
-    padding-right: 3.5rem;
+    background-color: rgba(238, 238, 238, 0.35);
+    background-color: getColor(elephant);
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 8px 16px;
     border-radius: 3px;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     font-size: 0.875rem;
