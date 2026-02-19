@@ -37,11 +37,11 @@ export default function remarkCustomAsides(
         // remove custom characters from paragraph
         node.children = [
           {
-            type: "paragraph",
+            type: "heading",
+            depth: 6,
             data: {
               // see https://github.com/syntax-tree/mdast-util-to-hast#hname
               // add a className to heading
-              hName: "p",
               hProperties: {
                 className: `${className}__prefix`,
               },
