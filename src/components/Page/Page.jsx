@@ -25,13 +25,11 @@ export default function Page(props) {
   } = props;
 
   const isDynamicContent = props.content instanceof Promise;
-  const [dynamicContent, setContent] = useState(
-    isDynamicContent ? placeholderString() : null,
+  const [content, setContent] = useState(
+    isDynamicContent
+      ? placeholderString()
+      : () => props.content.default || props.content,
   );
-  const content = isDynamicContent
-    ? dynamicContent
-    : props.content.default || props.content;
-
   const [contentLoaded, setContentLoaded] = useState(!isDynamicContent);
 
   useEffect(() => {
@@ -46,7 +44,6 @@ export default function Page(props) {
   }, [props.content]);
 
   const { hash, pathname } = useLocation();
-  const isBlogIndex = pathname === "/blog/";
 
   useEffect(() => {
     let observer;
@@ -55,15 +52,13 @@ export default function Page(props) {
         const target = document.querySelector("#md-content");
         // two cases here
         // 1. server side rendered page, so hash target is already there
-        // Note: Why this change because we use getElementById instead of querySelector(hash) here because
-        // CSS selectors cannot start with a digit (e.g. #11-in-scope is invalid)
-        if (document.getElementById(hash.slice(1))) {
-          document.getElementById(hash.slice(1)).scrollIntoView();
+        if (document.querySelector(hash)) {
+          document.querySelector(hash).scrollIntoView();
         } else {
           // 2. dynamic loaded content
           // we need to observe the dom change to tell if hash exists
           observer = new MutationObserver(() => {
-            const element = document.getElementById(hash.slice(1));
+            const element = document.querySelector(hash);
             if (element) {
               element.scrollIntoView();
             }
@@ -104,12 +99,10 @@ export default function Page(props) {
     );
   }
   return (
-    <main id="main-content" className="page">
+    <section className="page">
+      <main id="main-content">
       <Markdown>
         <h1>{title}</h1>
-        {rest.date && pathname.startsWith("/blog/") && !isBlogIndex && (
-          <div className="blog-post-date">{rest.date}</div>
-        )}
 
         {rest.thirdParty ? (
           <div className="italic my-[20px]">
@@ -121,27 +114,6 @@ export default function Page(props) {
         ) : null}
 
         <div id="md-content">{contentRender}</div>
-
-        {rest.url === "/blog/" && (
-          <div className="blog-list">
-            {(props.pages || [])
-              .filter((post) => post.url !== "/blog/")
-              .map((post) => (
-                <div key={post.url} className="blog-post-item">
-                  <h2>
-                    <Link to={post.url}>{post.title}</Link>
-                  </h2>
-                  {post.date && (
-                    <div className="blog-post-date">{post.date}</div>
-                  )}
-                  <p>{post.teaser}</p>
-                  <Link to={post.url} className="read-more">
-                    Read More &rarr;
-                  </Link>
-                </div>
-              ))}
-          </div>
-        )}
 
         {loadRelated && (
           <div className="print:hidden">
@@ -158,7 +130,7 @@ export default function Page(props) {
 
         <PageLinks page={rest} />
 
-        {!isBlogIndex && (previous || next) && (
+        {(previous || next) && (
           <AdjacentPages previous={previous} next={next} />
         )}
 
@@ -172,7 +144,8 @@ export default function Page(props) {
           </div>
         )}
       </Markdown>
-    </main>
+        </main>
+    </section>
   );
 }
 
@@ -182,7 +155,6 @@ Page.propTypes = {
   related: PropTypes.array,
   previous: PropTypes.object,
   next: PropTypes.object,
-  pages: PropTypes.array,
   content: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.func,
