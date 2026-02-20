@@ -112,7 +112,7 @@ import "./publicPath.js";
 **webpack.config.js**
 
 ```diff
-const path = require('path');
+const path = require("node:path");
 
 module.exports = {
   entry: './src/index.js',
@@ -150,7 +150,7 @@ You can modify this template by setting [`output.assetModuleFilename`](/configur
 **webpack.config.js**
 
 ```diff
-const path = require('path');
+const path = require("node:path");
 
 module.exports = {
   entry: './src/index.js',
@@ -173,7 +173,7 @@ module.exports = {
 Another case to customize output filename is to emit some kind of assets to a specified directory:
 
 ```diff
-const path = require('path');
+const path = require("node:path");
 
 module.exports = {
   entry: './src/index.js',
@@ -205,7 +205,7 @@ With this configuration all the `html` files will be emitted into a `static` dir
 **webpack.config.js**
 
 ```diff
-const path = require('path');
+const path = require("node:path");
 
 module.exports = {
   entry: './src/index.js',
@@ -243,7 +243,7 @@ If you want to use a custom encoding algorithm, you may specify a custom functio
 **webpack.config.js**
 
 ```diff
-const path = require('path');
+const path = require("node:path");
 + const svgToMiniDataURI = require('mini-svg-data-uri');
 
 module.exports = {
@@ -276,7 +276,7 @@ Now all `.svg` files will be encoded by `mini-svg-data-uri` package.
 **webpack.config.js**
 
 ```diff
-const path = require('path');
+const path = require("node:path");
 
 module.exports = {
   entry: './src/index.js',
@@ -370,7 +370,7 @@ console.log(url.pathname === ",");
 **webpack.config.js**
 
 ```diff
-const path = require('path');
+const path = require("node:path");
 
 module.exports = {
   entry: './src/index.js',
@@ -396,7 +396,7 @@ You can change this condition by setting a [`Rule.parser.dataUrlCondition.maxSiz
 **webpack.config.js**
 
 ```diff
-const path = require('path');
+const path = require("node:path");
 
 module.exports = {
   entry: './src/index.js',
@@ -427,7 +427,7 @@ Also you can [specify a function](/configuration/module/#ruleparserdataurlcondit
 **webpack.config.js**
 
 ```diff
-const path = require('path');
+const path = require("node:path");
 
 module.exports = {
   entry: './src/index.js',
