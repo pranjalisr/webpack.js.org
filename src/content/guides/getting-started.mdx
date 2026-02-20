@@ -253,7 +253,9 @@ As of version 4, webpack doesn't require any configuration, but most projects wi
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-// __dirname isn't available in ESM; derive it from import.meta.url
+// In Node.js versions prior to native support for import.meta.dirname,
+// derive __dirname from import.meta.url.
+// (Node 20.11+ supports import.meta.dirname and import.meta.filename.)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
