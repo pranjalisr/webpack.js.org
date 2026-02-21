@@ -1,8 +1,6 @@
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import hastscript from "hastscript";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import autolink from "remark-autolink-headings";
 import remarkEmoji from "remark-emoji";
@@ -21,6 +19,19 @@ const __dirname = path.dirname(__filename);
 
 const require = createRequire(import.meta.url);
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+const hastscriptMod = require("hastscript");
+
+const hastscriptFn =
+  (typeof hastscriptMod === "function" && hastscriptMod) ||
+  (typeof hastscriptMod?.h === "function" && hastscriptMod.h) ||
+  (typeof hastscriptMod?.default === "function" && hastscriptMod.default) ||
+  (typeof hastscriptMod.default?.h === "function" && hastscriptMod.default.h) ||
+  null;
+
+if (!hastscriptFn) {
+  throw new Error("Unable to resolve hastscript export");
+}
 const mdPlugins = [
   gfm,
   slug,
@@ -42,7 +53,7 @@ const mdPlugins = [
     {
       behavior: "append",
       content() {
-        return [hastscript("span.header-link")];
+        return [hastscriptFn("span.header-link")];
       },
     },
   ],
