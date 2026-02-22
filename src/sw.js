@@ -26,10 +26,13 @@ const otherManifest = [
   },
 ];
 
-const allManifestURLs = [...manifest, ...otherManifest].map(
-  (entry) => new URL(entry.url, self.location).href,
-);
-
+const allManifestURLs = [
+  new Set(
+    [...manifest, ...otherManifest].map(
+      (entry) => new URL(entry.url, self.location).href,
+    ),
+  ),
+];
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
