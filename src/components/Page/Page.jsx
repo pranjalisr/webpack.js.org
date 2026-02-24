@@ -99,53 +99,51 @@ export default function Page(props) {
     );
   }
   return (
-    <section className="page">
-      <main id="main-content">
-        <Markdown>
-          <h1>{title}</h1>
+    <main id="main-content" className="page">
+      <Markdown>
+        <h1>{title}</h1>
 
-          {rest.thirdParty ? (
-            <div className="italic my-[20px]">
-              <strong className="font-bold">Disclaimer:</strong> {title} is a
-              third-party package maintained by community members, it
-              potentially does not have the same support, security policy or
-              license as webpack, and it is not maintained by webpack.
-            </div>
-          ) : null}
+        {rest.thirdParty ? (
+          <div className="italic my-[20px]">
+            <strong className="font-bold">Disclaimer:</strong> {title} is a
+            third-party package maintained by community members, it potentially
+            does not have the same support, security policy or license as
+            webpack, and it is not maintained by webpack.
+          </div>
+        ) : null}
 
-          <div id="md-content">{contentRender}</div>
+        <div id="md-content">{contentRender}</div>
 
-          {loadRelated && (
-            <div className="print:hidden">
-              <h2>Further Reading</h2>
-              <ul>
-                {related.map((link, index) => (
-                  <li key={index}>
-                    <Link to={link.url}>{link.title}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        {loadRelated && (
+          <div className="print:hidden">
+            <h2>Further Reading</h2>
+            <ul>
+              {related.map((link, index) => (
+                <li key={index}>
+                  <Link to={link.url}>{link.title}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-          <PageLinks page={rest} />
+        <PageLinks page={rest} />
 
-          {(previous || next) && (
-            <AdjacentPages previous={previous} next={next} />
-          )}
+        {(previous || next) && (
+          <AdjacentPages previous={previous} next={next} />
+        )}
 
-          {loadContributors && (
-            <div data-testid="contributors" className="print:hidden">
-              <h2 className="!font-sans !font-normal">
-                {numberOfContributors}{" "}
-                {numberOfContributors === 1 ? "Contributor" : "Contributors"}
-              </h2>
-              <Contributors contributors={contributors} />
-            </div>
-          )}
-        </Markdown>
-      </main>
-    </section>
+        {loadContributors && (
+          <div data-testid="contributors" className="print:hidden">
+            <h2 className="!font-sans !font-normal">
+              {numberOfContributors}{" "}
+              {numberOfContributors === 1 ? "Contributor" : "Contributors"}
+            </h2>
+            <Contributors contributors={contributors} />
+          </div>
+        )}
+      </Markdown>
+    </main>
   );
 }
 
