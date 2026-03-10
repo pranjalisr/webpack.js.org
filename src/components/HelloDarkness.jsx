@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useEffect, useSyncExternalStore } from "react";
 import { useLocalStorage } from "react-use";
 import { THEME_LOCAL_STORAGE_KEY, Theme } from "../constants/theme.mjs";
@@ -69,12 +68,3 @@ export default function HelloDarkness() {
     </Tooltip>
   );
 }
-
-HelloDarkness.propTypes = {
-  theme: PropTypes.oneOf([DARK, LIGHT]),
-  switchTheme: PropTypes.func,
-};
-
-HelloDarkness.defaultProps = {
-  theme: LIGHT,
-};
