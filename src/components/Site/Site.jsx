@@ -334,7 +334,7 @@ function Site(props) {
                     page={page}
                     next={next}
                     previous={previous}
-                    import={props.import}
+                    loadContent={props.loadContent}
                     path={path}
                   />
                 }
@@ -350,14 +350,14 @@ function Site(props) {
 }
 
 Site.propTypes = {
-  import: PropTypes.func,
+  loadContent: PropTypes.func,
 };
 
 export default Site;
 
 function PageElement(props) {
   const { currentPage, sidebarPages, page, previous, next } = props;
-  const content = props.import(props.path);
+  const content = props.loadContent(props.path);
   return (
     <Fragment>
       <Sponsors />
@@ -384,6 +384,6 @@ PageElement.propTypes = {
   previous: PropTypes.object,
   next: PropTypes.object,
   page: PropTypes.object,
-  import: PropTypes.func,
+  loadContent: PropTypes.func,
   path: PropTypes.string,
 };
