@@ -194,7 +194,7 @@ function Navigation({ links, pathname, hash = "", toggleSidebar }) {
               ]}
             />
           </nav>
-          <div className="inline-flex items-center ml-[18px]">
+          <div className="inline-flex items-center gap-x-[18px] ml-[18px]">
             <HelloDarkness />
             {mounted && (
               <DocSearch
