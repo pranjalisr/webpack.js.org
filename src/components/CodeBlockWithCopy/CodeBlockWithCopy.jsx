@@ -18,11 +18,20 @@ export default function CodeBlockWithCopy({ children }) {
 
     const clonedCodeElement = codeElement.cloneNode(true);
 
-    // Exclude +/-/unchanged tokens and removed lines
+    // Remove entire deleted lines
     for (const element of clonedCodeElement.querySelectorAll(
-      ".token.prefix.inserted, .token.prefix.unchanged, .token.deleted-sign.deleted",
+      ".token.deleted",
     )) {
       element.remove();
+    }
+
+    // Strip leading '+' from inserted lines
+    for (const element of clonedCodeElement.querySelectorAll(
+      ".token.inserted",
+    )) {
+      if (element.textContent.startsWith("+")) {
+        element.textContent = element.textContent.slice(1);
+      }
     }
 
     return clonedCodeElement.textContent || "";
