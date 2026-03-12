@@ -778,11 +778,21 @@ Specifies the behavior of invalid export names in `\"import ... from ...\"`.
 
 #### module.parser.javascript.importMeta
 
-Enable or disable evaluating `import.meta`.
+Controls how webpack evaluates `import.meta` expressions during bundling.
 
-- Type: `boolean = true`
+- Type: `boolean | 'preserve-unknown'`
+- Default: `true`
 - Available: 5.68.0+
-- Example:
+
+Accepted values:
+
+- `true` - webpack evaluates known `import.meta` properties (e.g. `import.meta.url`, `import.meta.webpackHot`); behavior of unknown properties depends on other configuration (e.g. `output.module`).
+- `false` - disables all `import.meta` evaluation; webpack leaves expressions as-is.
+- `'preserve-unknown'` <Badge text="5.105.0+" /> - evaluates known properties as usual but **preserves** any non-standard properties verbatim in the output instead of removing them.
+
+  W> When `output.module` is `true`, unknown `import.meta` properties are preserved automatically without this option.
+
+- Example - disable `import.meta` evaluation entirely:
 
   ```js
   export default {
@@ -794,6 +804,30 @@ Enable or disable evaluating `import.meta`.
       },
     },
   };
+  ```
+
+- Example - preserve custom `import.meta` properties without enabling `output.module`:
+
+  ```js
+  // webpack.config.js
+  export default {
+    module: {
+      parser: {
+        javascript: {
+          importMeta: "preserve-unknown",
+        },
+      },
+    },
+  };
+  ```
+
+  With this configuration, custom properties on `import.meta` set by the build tool or runtime are preserved in the generated output:
+
+  ```js
+  // import.meta.customProp is set externally (e.g. by a build tool or runtime)
+  if (import.meta.customProp) {
+    console.log(import.meta.customProp);
+  }
   ```
 
 #### module.parser.javascript.importMetaContext
